@@ -1,5 +1,11 @@
 import React, { useEffect } from "react";
-import { FlatList, Text, View, TouchableOpacity } from "react-native";
+import {
+  FlatList,
+  Text,
+  View,
+  TouchableOpacity,
+  SafeAreaView,
+} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchPosts,
@@ -42,9 +48,11 @@ const PostsList: React.FC = () => {
       keyExtractor={(item) => item.id.toString()}
       renderItem={({ item }) => (
         <TouchableOpacity onPress={() => handlePress(item.id, item.title)}>
-          <View style={styles.item}>
-            <Text>{item.title}</Text>
-          </View>
+          <SafeAreaView>
+            <View style={styles.item}>
+              <Text>{item.title}</Text>
+            </View>
+          </SafeAreaView>
         </TouchableOpacity>
       )}
     />

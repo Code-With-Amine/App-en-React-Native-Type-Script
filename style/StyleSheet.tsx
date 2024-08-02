@@ -10,8 +10,11 @@ export const styles = StyleSheet.create({
   },
   item: {
     padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
+    marginHorizontal: 20,
+    marginVertical: 10,
+    textAlign: 'center',
+    backgroundColor: "#ffffff",
+    borderRadius: 6,
   },
   postDetailsContainer: {
     flex: 1,
@@ -19,8 +22,7 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     padding: 16,
   },
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
+  postDetail: {
+    paddingTop: 16,
   },
 });

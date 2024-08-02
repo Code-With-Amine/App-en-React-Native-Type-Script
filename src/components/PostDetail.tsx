@@ -1,7 +1,8 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, SafeAreaView } from "react-native";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { styles } from "../../style/StyleSheet";
+import { ListItem } from "@rneui/themed";
 
 type RootStackParamList = {
   PostDetail: { id: number; title: string };
@@ -14,10 +15,14 @@ const PostDetail: React.FC = () => {
   const { id, title } = route.params;
 
   return (
-    <View style={styles.postDetailsContainer}>
-      <Text style={styles.title}>ID de Post: {id}</Text>
-      <Text style={styles.title}>Titre de Post: {title}</Text>
-    </View>
+    <SafeAreaView>
+      <ListItem style={styles.postDetailsContainer}>
+        <ListItem.Content >
+          <ListItem.Title>ID de Post: {id}</ListItem.Title>
+          <ListItem.Subtitle style={styles.postDetail}>Titre de Post: {title}</ListItem.Subtitle>
+        </ListItem.Content>
+      </ListItem>
+    </SafeAreaView>
   );
 };
 
