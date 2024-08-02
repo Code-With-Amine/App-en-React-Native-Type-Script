@@ -12,7 +12,7 @@ export const styles = StyleSheet.create({
     padding: 16,
     marginHorizontal: 20,
     marginVertical: 10,
-    textAlign: 'center',
+    textAlign: "center",
     backgroundColor: "#ffffff",
     borderRadius: 6,
   },
@@ -24,5 +24,7 @@ export const styles = StyleSheet.create({
   },
   postDetail: {
     paddingTop: 16,
+    fontSize: 16,
+    color: "gray",
   },
 });

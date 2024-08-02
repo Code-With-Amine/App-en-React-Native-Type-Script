@@ -38,8 +38,8 @@ const PostsList: React.FC = () => {
     return <Text>Error: {error}</Text>;
   }
 
-  const handlePress = (id: number, title: string) => {
-    navigation.navigate("PostDetail", { id, title });
+  const handlePress = (id: number) => {
+    navigation.navigate("PostDetail", { id });
   };
 
   return (
@@ -47,7 +47,7 @@ const PostsList: React.FC = () => {
       data={items}
       keyExtractor={(item) => item.id.toString()}
       renderItem={({ item }) => (
-        <TouchableOpacity onPress={() => handlePress(item.id, item.title)}>
+        <TouchableOpacity onPress={() => handlePress(item.id)}>
           <SafeAreaView>
             <View style={styles.item}>
               <Text>{item.title}</Text>

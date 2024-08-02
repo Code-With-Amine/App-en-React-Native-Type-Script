@@ -9,12 +9,14 @@ interface Post {
 
 interface PostsState {
   posts: Post[];
+  post: Post | null;
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
 
 const initialState: PostsState = {
   posts: [],
+  post: null,
   status: "idle",
   error: null,
 };
@@ -35,7 +37,16 @@ const FETCH_POSTS_QUERY = gql`
   }
 `;
 
-export const fetchPosts = createAsyncThunk("post/fetchPosts", async () => {
+const FETCH_POST_QUERY = gql`
+  query ($id: ID!) {
+    post(id: $id) {
+      id
+      title
+    }
+  }
+`;
+
+export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
   try {
     const response = await client.query({
       query: FETCH_POSTS_QUERY,
@@ -47,6 +58,23 @@ export const fetchPosts = createAsyncThunk("post/fetchPosts", async () => {
     throw new Error(error.message);
   }
 });
+
+export const fetchPostById = createAsyncThunk(
+  "posts/fetchPostById",
+  async (id: number) => {
+    try {
+      const response = await client.query({
+        query: FETCH_POST_QUERY,
+        variables: { id },
+        fetchPolicy: "network-only",
+      });
+
+      return response.data.post as Post;
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
+  }
+);
 
 const postsSlice = createSlice({
   name: "posts",
@@ -64,7 +92,19 @@ const postsSlice = createSlice({
       .addCase(fetchPosts.rejected, (state, action) => {
         state.status = "failed";
         state.error =
-          action.error.message || "Echec de la récupération des éléments";
+          action.error.message || "Failed to fetch posts";
+      })
+      .addCase(fetchPostById.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchPostById.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.post = action.payload;
+      })
+      .addCase(fetchPostById.rejected, (state, action) => {
+        state.status = "failed";
+        state.error =
+          action.error.message || "Failed to fetch the post";
       });
   },
 });
@@ -72,5 +112,6 @@ const postsSlice = createSlice({
 export const selectAllItems = (state: RootState) => state.items.posts;
 export const getItemsStatus = (state: RootState) => state.items.status;
 export const getItemsError = (state: RootState) => state.items.error;
+export const selectPostById = (state: RootState) => state.items.post;
 
 export default postsSlice.reducer;
