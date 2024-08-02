@@ -1,22 +1,17 @@
 import React, { useEffect } from "react";
-import {
-  FlatList,
-  Text,
-  View,
-  TouchableOpacity,
-} from "react-native";
+import { FlatList, Text, View, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  fetchItems,
+  fetchPosts,
   selectAllItems,
   getItemsStatus,
   getItemsError,
-} from "../slices/itemsSlice";
+} from "../slices/postsSlice";
 import { AppDispatch } from "../store/store";
 import { useNavigation } from "@react-navigation/native";
 import { styles } from "../../style/StyleSheet";
 
-const ItemsList: React.FC = () => {
+const PostsList: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigation = useNavigation<any>();
   const items = useSelector(selectAllItems);
@@ -25,7 +20,7 @@ const ItemsList: React.FC = () => {
 
   useEffect(() => {
     if (status === "idle") {
-      dispatch(fetchItems());
+      dispatch(fetchPosts());
     }
   }, [status, dispatch]);
 
@@ -56,4 +51,4 @@ const ItemsList: React.FC = () => {
   );
 };
 
-export default ItemsList;
+export default PostsList;

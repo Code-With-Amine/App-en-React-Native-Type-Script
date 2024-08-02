@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { RouteProp, useRoute } from "@react-navigation/native";
+import { styles } from "../../style/StyleSheet";
 
 type RootStackParamList = {
   PostDetail: { id: number; title: string };
@@ -13,24 +14,11 @@ const PostDetail: React.FC = () => {
   const { id, title } = route.params;
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Post ID: {id}</Text>
-      <Text style={styles.title}>Post Title: {title}</Text>
+    <View style={styles.postDetailsContainer}>
+      <Text style={styles.title}>ID de Post: {id}</Text>
+      <Text style={styles.title}>Titre de Post: {title}</Text>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 16,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-});
 
 export default PostDetail;

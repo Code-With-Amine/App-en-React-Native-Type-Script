@@ -2,19 +2,19 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "../store/store";
 import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
 
-interface Item {
+interface Post {
   id: number;
   title: string;
 }
 
-interface ItemsState {
-  items: Item[];
+interface PostsState {
+  posts: Post[];
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
 
-const initialState: ItemsState = {
-  items: [],
+const initialState: PostsState = {
+  posts: [],
   status: "idle",
   error: null,
 };
@@ -24,7 +24,7 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-const FETCH_ITEMS_QUERY = gql`
+const FETCH_POSTS_QUERY = gql`
   query {
     posts {
       data {
@@ -35,41 +35,42 @@ const FETCH_ITEMS_QUERY = gql`
   }
 `;
 
-export const fetchItems = createAsyncThunk("items/fetchItems", async () => {
+export const fetchPosts = createAsyncThunk("post/fetchPosts", async () => {
   try {
     const response = await client.query({
-      query: FETCH_ITEMS_QUERY,
+      query: FETCH_POSTS_QUERY,
       fetchPolicy: "network-only",
     });
 
-    return response.data.posts.data as Item[];
+    return response.data.posts.data as Post[];
   } catch (error: any) {
     throw new Error(error.message);
   }
 });
 
-const itemsSlice = createSlice({
-  name: "items",
+const postsSlice = createSlice({
+  name: "posts",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchItems.pending, (state) => {
+      .addCase(fetchPosts.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(fetchItems.fulfilled, (state, action) => {
+      .addCase(fetchPosts.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.items = action.payload;
+        state.posts = action.payload;
       })
-      .addCase(fetchItems.rejected, (state, action) => {
+      .addCase(fetchPosts.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.error.message || "Failed to fetch items";
+        state.error =
+          action.error.message || "Echec de la récupération des éléments";
       });
   },
 });
 
-export const selectAllItems = (state: RootState) => state.items.items;
+export const selectAllItems = (state: RootState) => state.items.posts;
 export const getItemsStatus = (state: RootState) => state.items.status;
 export const getItemsError = (state: RootState) => state.items.error;
 
-export default itemsSlice.reducer;
+export default postsSlice.reducer;
