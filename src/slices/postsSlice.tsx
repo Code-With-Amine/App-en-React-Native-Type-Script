@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "../store/store";
-import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
+import { client, FETCH_POSTS_QUERY, FETCH_POST_QUERY } from "../DB";
 
 interface Post {
   id: number;
@@ -20,31 +20,6 @@ const initialState: PostsState = {
   status: "idle",
   error: null,
 };
-
-const client = new ApolloClient({
-  uri: "https://graphqlzero.almansi.me/api",
-  cache: new InMemoryCache(),
-});
-
-const FETCH_POSTS_QUERY = gql`
-  query {
-    posts {
-      data {
-        id
-        title
-      }
-    }
-  }
-`;
-
-const FETCH_POST_QUERY = gql`
-  query ($id: ID!) {
-    post(id: $id) {
-      id
-      title
-    }
-  }
-`;
 
 export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
   try {
@@ -91,8 +66,7 @@ const postsSlice = createSlice({
       })
       .addCase(fetchPosts.rejected, (state, action) => {
         state.status = "failed";
-        state.error =
-          action.error.message || "Failed to fetch posts";
+        state.error = action.error.message || "Failed to fetch posts";
       })
       .addCase(fetchPostById.pending, (state) => {
         state.status = "loading";
@@ -103,8 +77,7 @@ const postsSlice = createSlice({
       })
       .addCase(fetchPostById.rejected, (state, action) => {
         state.status = "failed";
-        state.error =
-          action.error.message || "Failed to fetch the post";
+        state.error = action.error.message || "Failed to fetch the post";
       });
   },
 });
